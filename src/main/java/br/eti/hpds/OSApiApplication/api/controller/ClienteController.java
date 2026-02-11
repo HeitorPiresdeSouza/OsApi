@@ -2,6 +2,7 @@ package br.eti.hpds.OSApiApplication.api.controller;
 
 import br.eti.hpds.OSApiApplication.domain.model.Cliente;
 import br.eti.hpds.OSApiApplication.domain.repository.ClienteRepository;
+import br.eti.hpds.OSApiApplication.domain.service.ClienteService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +31,9 @@ public class ClienteController {
 
     @Autowired
     private ClienteRepository clienteRepository;
+    
+    @Autowired
+    private ClienteService clienteService;
 
     @GetMapping("/clientes")
     public List<Cliente> listas() {
@@ -51,7 +56,7 @@ public class ClienteController {
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
         
-        return clienteRepository.save(cliente);
+        return clienteService.salvar(cliente);
     }
     
     @PutMapping("/clientes/{clienteID}")
@@ -63,7 +68,7 @@ public class ClienteController {
         }
         
         cliente.setId(clienteID);
-        cliente = clienteRepository.save(cliente);
+        cliente = clienteService.salvar(cliente);
         return ResponseEntity.ok(cliente);
     }
     
@@ -74,7 +79,7 @@ public class ClienteController {
             return ResponseEntity.notFound().build();
         }
         
-        clienteRepository.deleteById(clienteID);
+        clienteService.excluir(clienteID);
         return ResponseEntity.noContent().build();
     }
 }
