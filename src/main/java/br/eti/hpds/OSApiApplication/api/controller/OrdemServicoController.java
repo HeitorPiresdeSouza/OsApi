@@ -1,5 +1,6 @@
 package br.eti.hpds.OSApiApplication.api.controller;
 
+import br.eti.hpds.OSApiApplication.domain.dto.AtualizaStatusDTO;
 import br.eti.hpds.OSApiApplication.domain.model.Cliente;
 import br.eti.hpds.OSApiApplication.domain.model.OrdemServico;
 import br.eti.hpds.OSApiApplication.domain.repository.ClienteRepository;
@@ -111,6 +112,22 @@ public class OrdemServicoController {
 
             ordemServicoService.excluir(ordemServicoID);
             return ResponseEntity.noContent().build();
+        }
+    }
+    @PutMapping("/atualiza-status/{ordemServicoID}")
+    public ResponseEntity<OrdemServico> atualizaStatus(
+            @PathVariable Long ordemServicoID,
+            @Valid @RequestBody AtualizaStatusDTO statusDTO){
+        
+        Optional<OrdemServico> optOS = ordemServicoService.atualizaStatus(
+                ordemServicoID,
+                statusDTO.status());
+        
+        if (optOS.isPresent()){
+            return ResponseEntity.ok(optOS.get());
+        
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }

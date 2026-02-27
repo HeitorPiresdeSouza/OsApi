@@ -28,12 +28,12 @@ public class OrdemServico {
     
     private LocalDateTime dataAbertura;
     private LocalDateTime dataFinalizacao;
+    
+    
 
     public OrdemServico() {
     }
 
-    
-    
     
     public OrdemServico(Cliente cliente, String descricao, BigDecimal preco) {
         this.cliente = cliente;
