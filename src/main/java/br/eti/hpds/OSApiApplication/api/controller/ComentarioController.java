@@ -1,5 +1,6 @@
 package br.eti.hpds.OSApiApplication.api.controller;
 
+import br.eti.hpds.OSApiApplication.domain.dto.ComentarioDTO;
 import br.eti.hpds.OSApiApplication.domain.model.Comentario;
 import br.eti.hpds.OSApiApplication.domain.repository.ComentarioRepository;
 import br.eti.hpds.OSApiApplication.domain.repository.OrdemServicoRepository;
@@ -30,28 +31,30 @@ public class ComentarioController {
     @Autowired
     private ComentarioService comentarioService;
 
-    @Autowired
-    private OrdemServicoRepository ordemServicoRepository;
-
+    /**
+     * Cria um comentário.
+     * @param comentario
+     * @return 
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Comentario criar(@RequestBody Comentario comentario) {
-        return comentario.criar(comentario);
+    public Comentario criar(@RequestBody ComentarioDTO comentarioDTO) {
+        return comentarioService.salvar(comentarioDTO);
     }
 
-    @GetMapping("/comentario/{comentarioID}")
-    public List<Comentario> buscarById(@PathVariable Long comentarioID) {
+    @GetMapping("/{comentarioID}")
+    public ResponseEntity<Comentario> buscarById(@PathVariable Long comentarioID) {
 
         Optional<Comentario> comentario = comentarioRepository.findById(comentarioID);
 
         if (comentario.isPresent()) {
-            return (List<Comentario>) ResponseEntity.ok(comentario.get());
+            return ResponseEntity.ok(comentario.get());
         } else {
-            return (List<Comentario>) ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping("/comentario")
+    @GetMapping
     public ResponseEntity<List<Comentario>> findTodos() {
 
         List<Comentario> comentario = comentarioService.findTodosComentarios();
@@ -63,19 +66,26 @@ public class ComentarioController {
         }
     }
     
-    @PutMapping("/comentario/{comentarioID}")
-    public ResponseEntity<Comentario> atualizar (@Valid @PathVariable Long comentarioID,
-            @RequestBody Comentario comentario) {
-        if (!comentarioRepository.existsById(comentarioID)) {
+    @PutMapping("/{comentarioID}")
+    public ResponseEntity<Comentario> atualizar (@PathVariable Long comentarioID,
+            @RequestBody ComentarioDTO comentarioDTO) {
+        
+        Optional<Comentario> optComentario = comentarioRepository.findById(comentarioID);
+        
+        if (optComentario.isEmpty()){
             return ResponseEntity.notFound().build();
         }
         
-        comentario.setId(comentarioID);
-        comentario = comentarioService.salvar(comentario);
+        Comentario comentario = optComentario.get();
+        comentario.setDescricao(comentarioDTO.descricao());
+        
+        comentarioService.atualizar(comentario);
+        
         return ResponseEntity.ok(comentario);
-    }
     
-    @DeleteMapping("/comentario/{comentarioID}")
+    }
+//    
+    @DeleteMapping("/{comentarioID}")
     public ResponseEntity<Void> excluir(@PathVariable Long comentarioID) {
         
         if (!comentarioRepository.existsById(comentarioID)) {

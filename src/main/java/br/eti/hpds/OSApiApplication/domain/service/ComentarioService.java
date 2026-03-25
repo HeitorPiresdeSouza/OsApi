@@ -1,5 +1,6 @@
 package br.eti.hpds.OSApiApplication.domain.service;
 
+import br.eti.hpds.OSApiApplication.domain.dto.ComentarioDTO;
 import br.eti.hpds.OSApiApplication.domain.exception.DomainException;
 import br.eti.hpds.OSApiApplication.domain.model.Comentario;
 import br.eti.hpds.OSApiApplication.domain.model.OrdemServico;
@@ -15,42 +16,45 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ComentarioService {
-    
+
     @Autowired
     private ComentarioRepository comentarioRepository;
-    
+
     @Autowired
     private OrdemServicoRepository ordemServicoRepository;
-    
-    @Autowired
-    private ClienteRepository clienteRepository;
-    
-    public Comentario criar (Comentario comentario){
-        comentario.setDescricao(comentario.getDescricao());
-        comentario.setDataEnvio(LocalDateTime.now());
+
+    public Comentario salvar(ComentarioDTO comentarioDTO) {
+
+        Optional<OrdemServico> optOrdemServico = ordemServicoRepository.findById(
+                comentarioDTO.ordemServicoId());
         
+        if (optOrdemServico.isEmpty()) {
+            throw new DomainException("OrdemServico não existe");
+        }
+
+        // Existe Ordem de Serviço!
+        Comentario comentario = new Comentario();
+        comentario.setDescricao(comentarioDTO.descricao());
+        comentario.setDataEnvio(LocalDateTime.now());
+        comentario.setOrdemServico(optOrdemServico.get());
+        return comentarioRepository.save(comentario);
+
+    }
+    
+    public Comentario atualizar(Comentario comentario){ 
         return comentarioRepository.save(comentario);
     }
-    
-    public void excluir(Long comentarioID){
+
+    public void excluir(Long comentarioID) {
         comentarioRepository.deleteById(comentarioID);
     }
-    
-     public List<Comentario> findTodosComentarios(){
-        
+
+    public List<Comentario> findTodosComentarios() {
+
         return comentarioRepository.findAll();
-        
+
     }
-     
-     public Comentario salvar (Comentario comentario) {
-         Optional<OrdemServico> ordemServicoExistente = ordemServicoRepository.findById(comentario.getId());
-         
-         if(!ordemServicoExistente.isPresent()) {
-             throw new DomainException("Cliente não existe");
-         } else {
-             return comentarioRepository.save(comentario);
-         }
-     }
+
 }
 
 /**

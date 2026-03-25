@@ -48,9 +48,9 @@ public class OrdemServicoController {
      * @return
      */
     @GetMapping("/bycliente/{clienteID}")
-    public ResponseEntity<List<OrdemServico>> buscarByCliente(@PathVariable Long clienteID) {
+    public ResponseEntity <List<OrdemServico>> buscarByCliente(@PathVariable Long clienteID) {
 
-        Optional<List<OrdemServico>> optListaServico = ordemServicoService.findByCliente(clienteID);
+        Optional <List<OrdemServico>> optListaServico = ordemServicoService.findByCliente(clienteID);
 
         if (optListaServico.isPresent()) {
             return ResponseEntity.ok(optListaServico.get());
@@ -66,7 +66,7 @@ public class OrdemServicoController {
      * @param ordemServicoID
      * @return
      */
-    @GetMapping("/ordem-servico/{ordemServicoID}")
+    @GetMapping("/{ordemServicoID}")
     public List<OrdemServico> buscar(@PathVariable Long ordemServicoID) {
 
         Optional<OrdemServico> ordemServico = ordemServicoRepository.findById(ordemServicoID);
@@ -78,7 +78,7 @@ public class OrdemServicoController {
         }
     }
 
-    @GetMapping("/ordem-servico")
+    @GetMapping
     public ResponseEntity<List<OrdemServico>> findTodosBlablabla() {
 
         List<OrdemServico> ordemServico = ordemServicoService.findTodasOrdemServico();
@@ -91,7 +91,7 @@ public class OrdemServicoController {
 
     }
 
-    @PutMapping("/ordem-servico/{ordemServicoID}")
+    @PutMapping("/{ordemServicoID}")
     public ResponseEntity<OrdemServico> atualizar(@Valid @PathVariable Long ordemServicoID,
             @RequestBody OrdemServico ordemServico) {
         if (!ordemServicoRepository.existsById(ordemServicoID)) {
@@ -103,7 +103,7 @@ public class OrdemServicoController {
         return ResponseEntity.ok(ordemServico);
     }
 
-    @DeleteMapping("/ordem-servico/{ordemServicoID}")
+    @DeleteMapping("{ordemServicoID}")
     public ResponseEntity<Void> excluir(@PathVariable Long ordemServicoID) {
 
         if (!ordemServicoRepository.existsById(ordemServicoID)) {

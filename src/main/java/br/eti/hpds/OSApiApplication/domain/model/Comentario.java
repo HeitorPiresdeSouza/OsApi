@@ -1,9 +1,12 @@
 package br.eti.hpds.OSApiApplication.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -15,16 +18,17 @@ public class Comentario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    
-    @NotBlank
-    @Size(max=200)
-    private String descricao;  
-    
-    @NotBlank
-    @Size(max=10)
+
+    @ManyToOne
+    @JoinColumn(name = "ordemservico_id")
+    @JsonIgnore
+    private OrdemServico ordemServico;
+
+    @Size(max = 200)
+    private String descricao;
+
     private LocalDateTime dataEnvio;
-    
-    
+
     public Comentario() {
     }
 
@@ -88,11 +92,12 @@ public class Comentario {
         return Objects.equals(this.dataEnvio, other.dataEnvio);
     }
 
-    public Comentario criar(Comentario comentario) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public OrdemServico getOrdemServico() {
+        return ordemServico;
     }
-    
-    
-    
-    
+
+    public void setOrdemServico(OrdemServico ordemServico) {
+        this.ordemServico = ordemServico;
+    }
+
 }
