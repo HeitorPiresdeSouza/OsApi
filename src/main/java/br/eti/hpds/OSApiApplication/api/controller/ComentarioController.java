@@ -5,6 +5,9 @@ import br.eti.hpds.OSApiApplication.domain.model.Comentario;
 import br.eti.hpds.OSApiApplication.domain.repository.ComentarioRepository;
 import br.eti.hpds.OSApiApplication.domain.repository.OrdemServicoRepository;
 import br.eti.hpds.OSApiApplication.domain.service.ComentarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -37,12 +40,26 @@ public class ComentarioController {
      * @return 
      */
     @PostMapping
+    
+    @Operation(summary = "Publica um determinado comentario", description = "Publicação de um comentario na base de dados")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Successfully posted"),
+        @ApiResponse(responseCode = "422", description = "The format is correct, but the data failed the business rule")}
+    )
+    
     @ResponseStatus(HttpStatus.CREATED)
     public Comentario criar(@RequestBody ComentarioDTO comentarioDTO) {
         return comentarioService.salvar(comentarioDTO);
     }
 
     @GetMapping("/{comentarioID}")
+    
+    @Operation(summary = "Lista os comentarios por ID", description = "Retorna os comentários de determinada OS")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved"),
+        @ApiResponse(responseCode = "404", description = "Not found - The product was not found")}
+    )
+    
     public ResponseEntity<Comentario> buscarById(@PathVariable Long comentarioID) {
 
         Optional<Comentario> comentario = comentarioRepository.findById(comentarioID);
@@ -55,6 +72,13 @@ public class ComentarioController {
     }
 
     @GetMapping
+    
+    @Operation(summary = "Lista todos comentarios", description = "Retorna a lista de todos os comentarios da base de dados")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved"),
+        @ApiResponse(responseCode = "404", description = "Not found - The product was not found")}
+    )
+    
     public ResponseEntity<List<Comentario>> findTodos() {
 
         List<Comentario> comentario = comentarioService.findTodosComentarios();
@@ -67,6 +91,13 @@ public class ComentarioController {
     }
     
     @PutMapping("/{comentarioID}")
+    
+    @Operation(summary = "Atualiza um determinado comentario", description = "Atualização de um comentario na base de dados")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully updated"),
+        @ApiResponse(responseCode = "404", description = "Not found - The product was not found")}
+    )
+    
     public ResponseEntity<Comentario> atualizar (@PathVariable Long comentarioID,
             @RequestBody ComentarioDTO comentarioDTO) {
         
@@ -86,6 +117,13 @@ public class ComentarioController {
     }
 //    
     @DeleteMapping("/{comentarioID}")
+    
+    @Operation(summary = "Deleta um determinado comentario", description = "Exclui um comentario através do ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully deleted"),
+        @ApiResponse(responseCode = "404", description = "Not found - The product was not found")}
+    )
+    
     public ResponseEntity<Void> excluir(@PathVariable Long comentarioID) {
         
         if (!comentarioRepository.existsById(comentarioID)) {

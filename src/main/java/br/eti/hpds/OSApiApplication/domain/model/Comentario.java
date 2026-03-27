@@ -1,6 +1,7 @@
 package br.eti.hpds.OSApiApplication.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,19 +15,23 @@ import java.util.Objects;
 
 @Entity
 public class Comentario {
-
+    
+    @Schema(name = "Comentario ID", example = "1", required = true)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Schema(name = "Ordem Servico ID", example = "1", required = true)
     @ManyToOne
     @JoinColumn(name = "ordemservico_id")
     @JsonIgnore
     private OrdemServico ordemServico;
 
+    @Schema(name = "Descrição", example = "O material foi pra concerto", required = true)
     @Size(max = 200)
     private String descricao;
 
+    @Schema(name = "Data de Envio", example = "12-02-2026", required = true)
     private LocalDateTime dataEnvio;
 
     public Comentario() {

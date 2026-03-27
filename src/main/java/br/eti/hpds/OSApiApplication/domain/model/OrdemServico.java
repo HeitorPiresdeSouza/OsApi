@@ -1,5 +1,6 @@
 package br.eti.hpds.OSApiApplication.domain.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -16,23 +17,34 @@ import java.util.Objects;
 
 @Entity
 public class OrdemServico {
+    
+    @Schema(name = "Ordem de Servico ID", example = "1", required = true)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Schema(name = "Nome Cliente", example = "heitor", required = false)
     @ManyToOne
     private Cliente cliente;
     
+    @Schema(name = "Comentarios", example = "Concerto computador 222", required = false)
     @OneToMany(mappedBy = "ordemServico")
     private List<Comentario> comentarios;
     
+    @Schema(name = "Descrição", example = "O material foi pra concerto", required = false)
     private String descricao;
+    
+    @Schema(name = "Preço", example = "R$120,00", required = true)
     private BigDecimal preco;
     
+    @Schema(name = "Status", example = "ABERTA", required = false)
     @Enumerated(EnumType.STRING)
     private StatusOrdemServico status;
     
+    @Schema(name = "Data de Abertura", example = "12-02-2026", required = false)
     private LocalDateTime dataAbertura;
+    
+    @Schema(name = "Data de Finalização", example = "20-02-2026", required = false)
     private LocalDateTime dataFinalizacao;
     
     
